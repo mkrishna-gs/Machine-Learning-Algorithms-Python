@@ -18,42 +18,40 @@ y_train = np.array(y_train)
 x_test = np.array(x_test)
 y_test = np.array(y_test)
 
-#### Convert the row to column
+#### Convert the row to column.
 x_train = x_train.reshape(-1,1)
 x_test = x_test.reshape(-1,1)
+x_train = np.c_[np.ones(x_train.shape[0]), x_train]
+x_test = np.c_[np.ones(x_test.shape[0]), x_test]
 
-#### R2 square to estimate the goodness of the fit. 
-#### Doesn't take "biasing" into account.
-from sklearn.metrics import r2_score
-
-n = 700
+#### Train the data using Gradient descent method.
+n = y_train.size
 alpha = 0.0001
-
-a_0 = np.zeros((n,1))
-a_1 = np.zeros((n,1))
+iters = 1000
+np.random.seed(1)
+#### Randomny set the theta values intially.
+theta = np.random.rand(2)
+past_cost  = []
+past_theta = [theta]
 
 epochs = 0
-while(epochs < 1000):
-    y = a_0 + a_1 * x_train
+while(epochs < iters):
+    y = np.dot(x_train,theta)
     error = y - y_train
-    mean_sq_er = np.sum(error**2)
-    mean_sq_er = mean_sq_er/n
-    a_0 = a_0 - alpha * 2 * np.sum(error)/n 
-    a_1 = a_1 - alpha * 2 * np.sum(error * x_train)/n
+    cost = 1/(2*n)*np.dot(error.T, error)
+    past_cost.append(cost)
+    theta = theta - (alpha * (1/n) * np.dot(x_train.T, error))
+    past_theta.append(theta)
     epochs += 1
-    #if(epochs%10 == 0):
-    #    print(mean_sq_er)
 
-import matplotlib.pyplot as plt 
+#### R2 square value to determine the goodness of the fit.
+from sklearn.metrics import r2_score
+y_prediction = np.dot(x_test,theta)
+print('R2 Score:',r2_score(y_test,y_prediction))
 
-#y_prediction = a_0 + a_1 * x_test
-#print('R2 Score:',r2_score(y_test,y_prediction))
-
-y_plot = []
-for i in range(100):
-    y_plot.append(a_0 + a_1 * i)
-    plt.figure(figsize=(10,10))
-    plt.scatter(x_test,y_test,color='red',label='GT')
-    plt.plot(range(len(y_plot)),y_plot,color='black',label = 'pred')
-    plt.legend()
-    plt.show()
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10,10))
+plt.scatter(x_test[:,1],y_test,color='red',label='GT')
+plt.plot(x_test[:,1],y_prediction,color='black',label = 'pred')
+plt.legend()
+plt.show()
