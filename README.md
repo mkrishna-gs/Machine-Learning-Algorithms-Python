@@ -1,2 +1,2 @@
-# Machine-Learning-Algorithms-Python
-The basic Machine learning algorithms written in PYTHON using NumPy, Sci-kit learn, Pandas, etc,.
+# Non Regularized Linear Regression
+In this work, I have developed a basic simple linear regression alogorith in Python using vectorized "gradient descent method" and liner regression using "Sci-kit learn" in python. Since, it is a simple algorithm there is no much difference in vectorized gradient and linear regression using sci-kit learn. In these codes, I have also calculated the "R2" score using the sci-kit learn and found the same in both these algorithms. But this will differ in both computation efficiency and accuracy as the data becomes more and more complicated.
